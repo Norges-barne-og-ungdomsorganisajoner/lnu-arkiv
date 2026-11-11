@@ -6,7 +6,7 @@ window.LNU_ARKIV_CONFIG = {
   "sharepoint": {
     "hostname": "lnuno.sharepoint.com",
     "sitePath": "/sites/staben",
-    "library": "Epostarkiv",
+    "library": "E-postarkiv",
     "folder": "",
     "typeList": "Kommunikasjonstyper",
     "projectList": "Prosjekter"
