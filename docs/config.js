@@ -9,7 +9,10 @@ window.LNU_ARKIV_CONFIG = {
     "library": "E-postarkiv",
     "folder": "",
     "typeList": "Kommunikasjonstyper",
-    "projectList": "Prosjekter"
+    "projectList": "Prosjekter",
+    "typeField": "Title",
+    "projectField": "field_0",
+    "activeField": "Aktiv"
   },
   "category": "Arkivert i SharePoint"
 };

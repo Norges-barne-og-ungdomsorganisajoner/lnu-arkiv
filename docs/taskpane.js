@@ -234,8 +234,8 @@
     if (manual) showStatus("Laster listene …");
     try {
       const [types, projects] = await Promise.all([
-        fetchLookup(sp.typeListId),
-        fetchLookup(sp.projectListId),
+        fetchLookup(sp.typeListId, CFG.sharepoint.typeField || "Title"),
+        fetchLookup(sp.projectListId, CFG.sharepoint.projectField || "Title"),
       ]);
       fillSelect($("type"), types, "Velg type …");
       fillSelect($("project"), projects, "Velg prosjekt …");
@@ -246,12 +246,23 @@
     updateButton();
   }
 
-  async function fetchLookup(listId) {
+  // nameField er det interne navnet på kolonnen som har navnene (standard: Title).
+  // Den bør være den samme kolonnen som oppslagskolonnen i biblioteket henter fra.
+  // activeField er det interne navnet på Aktiv-kolonnen (standard: Aktiv). Mangler kolonnen, vises alle.
+  async function fetchLookup(listId, nameField) {
+    const activeField = CFG.sharepoint.activeField || "Aktiv";
     const items = await graphAll(`/sites/${sp.siteId}/lists/${listId}/items?$expand=fields&$top=500`);
     return items
-      .map((i) => ({ id: i.id, title: (i.fields && i.fields.Title) || "", active: !(i.fields && i.fields.Aktiv === false) }))
+      .map((i) => ({ id: i.id, title: String((i.fields && i.fields[nameField]) || "").trim(), active: isActive(i.fields && i.fields[activeField]) }))
       .filter((i) => i.title && i.active)
       .sort((a, b) => a.title.localeCompare(b.title, "nb"));
+  }
+
+  // Aktiv kan være en Ja/Nei-kolonne (true/false) eller en tekstkolonne ("Ja"/"Nei"). Mangler den, regnes elementet som aktivt.
+  function isActive(v) {
+    if (v === false || v === 0) return false;
+    if (typeof v === "string" && /^(nei|no|false|0)$/i.test(v.trim())) return false;
+    return true;
   }
 
   function fillSelect(select, options, placeholder) {
@@ -299,7 +310,9 @@
     $("mail-subject").textContent = item.subject || "(uten emne)";
     const from = item.from ? (item.from.displayName || item.from.emailAddress) : "";
     const date = item.dateTimeCreated ? formatDateTime(item.dateTimeCreated) : "";
-    $("mail-meta").textContent = [from, date].filter(Boolean).join(" · ");
+    const n = getAttachmentNames(item).length;
+    const att = n ? `${n} vedlegg` : "";
+    $("mail-meta").textContent = [from, date, att].filter(Boolean).join(" · ");
   }
 
   async function loadMessage() {
@@ -317,6 +330,7 @@
       cc: item.cc || [],
       date: item.dateTimeCreated ? new Date(item.dateTimeCreated) : null,
       internetMessageId: item.internetMessageId || "",
+      attachments: getAttachmentNames(item),
     };
     const owner = await getMailboxOwner(item);
     const existing = await findExisting(meta.internetMessageId);
@@ -339,6 +353,11 @@
       $("save").textContent = "Arkiver";
     }
     updateButton();
+  }
+
+  // Ekte vedlegg, uten innebygde bilder (f.eks. logoer i signaturer).
+  function getAttachmentNames(item) {
+    return (item.attachments || []).filter((a) => !a.isInline).map((a) => a.name || "(uten navn)");
   }
 
   // Hvem eier postkassen e-posten ligger i? Brukes bare til å avgjøre om e-posten er inn- eller utgående.
@@ -426,10 +445,14 @@
       let metadataOk = true;
       try {
         const listItem = await graph(`/drives/${sp.driveId}/items/${driveItem.id}/listItem?$select=id`);
-        await graph(`/sites/${sp.siteId}/lists/${sp.libListId}/items/${listItem.id}/fields`, {
-          method: "PATCH",
-          body: buildFields(job, typeId, projectId, comment),
-        });
+        const fieldsUrl = `/sites/${sp.siteId}/lists/${sp.libListId}/items/${listItem.id}/fields`;
+        await graph(fieldsUrl, { method: "PATCH", body: buildFields(job, typeId, projectId, comment) });
+        // Vedleggskolonnene lagres for seg, så resten av metadataene ikke går tapt om de mangler i biblioteket.
+        try {
+          await graph(fieldsUrl, { method: "PATCH", body: buildAttachmentFields(job) });
+        } catch (e) {
+          console.warn("Vedleggskolonnene mangler eller har feil navn", e);
+        }
       } catch (e) {
         metadataOk = false;
         console.error("Metadata feilet", e);
@@ -508,6 +531,14 @@
     if (m.date && !isNaN(m.date)) fields.Mottatt = m.date.toISOString();
     if (comment) fields.Kommentar = comment;
     return fields;
+  }
+
+  function buildAttachmentFields(job) {
+    const names = job.meta.attachments || [];
+    return {
+      HarVedlegg: names.length > 0,
+      Vedleggsnavn: names.join("\n"),
+    };
   }
 
   function buildFileName(meta) {

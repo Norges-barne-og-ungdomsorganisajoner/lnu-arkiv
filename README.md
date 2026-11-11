@@ -56,6 +56,12 @@ Regn med 1–2 timer første gang. Gjør stegene i denne rekkefølgen.
    | `Prosjekt` | Oppslag | Fra *Prosjekter*, kolonne Tittel |
    | `Kommentar` | Flere tekstlinjer | Ren tekst |
    | `MeldingsID` | Én tekstlinje | Brukes til å oppdage duplikater |
+   | `HarVedlegg` | Ja/Nei | Om e-posten har vedlegg. Visningsnavnet kan endres til «Vedlegg» etterpå. |
+   | `Vedleggsnavn` | Flere tekstlinjer | Ren tekst. Navnene på vedleggene, ett per linje. |
+
+   Emnet lagres i bibliotekets innebygde kolonne **Tittel**. Den er skjult i standardvisningen. Legg den til i visningen, og gi den gjerne visningsnavnet «Emne» under bibliotekinnstillingene.
+
+   I listene *Kommunikasjonstyper* og *Prosjekter* skal navnet stå i standardkolonnen **Tittel**. Det er den tillegget og oppslagskolonnene leser.
 
    > **Viktig:** Skriv kolonnenavnene nøyaktig som i tabellen når du oppretter dem. SharePoint låser det interne navnet ved opprettelse, og tillegget bruker det interne navnet. Ikke bruk æ, ø, å eller mellomrom i første omgang. Du kan endre visningsnavnet etterpå uten at noe slutter å virke.
 
@@ -104,6 +110,8 @@ Fyll inn `innstillinger.json`:
   "category": "Arkivert i SharePoint"
 }
 ```
+
+Ligger navnene i listene i en annen kolonne enn standardkolonnen Title (for eksempel fordi listen er laget fra Excel), legger du til `"projectField"` og/eller `"typeField"` under `sharepoint` med kolonnens **interne** navn, for eksempel `"projectField": "field_0"`. Det interne navnet står etter `Field=` i adressen når du redigerer kolonnen. Oppslagskolonnen i biblioteket bør hente fra den samme kolonnen.
 
 Sjekk at `hostname` og `sitePath` stemmer med adressen til arkivsiden. `folder` kan stå tom (alt havner i roten av biblioteket) eller være et mappenavn. Sett `"category": null` hvis du ikke vil at tillegget skal sette kategori.
 
