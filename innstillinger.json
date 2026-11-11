@@ -1,0 +1,16 @@
+{
+  "baseUrl": "https://norges-barne-og-ungdomsorganisajoner.github.io/lnu-arkiv",
+  "clientId": "73b41486-4984-4e94-8147-12dff7ecccc7",
+  "tenantId": "689edcde-fb62-4467-aef0-3afe537d0ad0",
+  "version": "1.0.0.0",
+  "sharepoint": {
+    "hostname": "lnuno.sharepoint.com",
+    "sitePath": "/sites/staben",
+    "library": "Epostarkiv",
+    "folder": "",
+    "typeList": "Kommunikasjonstyper",
+    "projectList": "Prosjekter"
+  },
+  "category": "Arkivert i SharePoint",
+  "addinId": "d8ae2560-fdd4-4595-87d0-a9dc19334d3f"
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LNU Arkiv</title>
+  <link rel="stylesheet" href="taskpane.css">
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="lib/msal-browser.min.js"></script>
+  <script src="config.js"></script>
+  <script src="taskpane.js" defer></script>
+</head>
+<body>
+  <main>
+    <section class="mail" aria-label="Valgt e-post">
+      <p class="mail-subject" id="mail-subject">Laster …</p>
+      <p class="mail-meta" id="mail-meta"></p>
+    </section>
+
+    <div class="notice" id="notice" hidden></div>
+
+    <form id="form" novalidate>
+      <label for="type">Type kommunikasjon</label>
+      <select id="type" required disabled>
+        <option value="">Laster …</option>
+      </select>
+
+      <label for="project">Prosjekt</label>
+      <select id="project" required disabled>
+        <option value="">Laster …</option>
+      </select>
+
+      <label for="comment">Kommentar <span class="optional">(valgfritt)</span></label>
+      <textarea id="comment" rows="3" maxlength="1000"></textarea>
+
+      <button type="submit" id="save" disabled>Arkiver</button>
+    </form>
+
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </main>
+
+  <footer>
+    <a id="library-link" href="#" target="_blank" rel="noopener" hidden>Åpne arkivet</a>
+    <button type="button" class="link" id="reload">Last inn listene på nytt</button>
+  </footer>
+</body>
+</html>
