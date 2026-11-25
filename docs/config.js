@@ -11,7 +11,7 @@ window.LNU_ARKIV_CONFIG = {
     "typeList": "Kommunikasjonstyper",
     "projectList": "Arkivprosjekter",
     "typeField": "Title",
-    "projectField": "Prosjekt",
+    "projectField": "field_0",
     "activeField": "Aktiv"
   },
   "category": "Arkivert i SharePoint"
