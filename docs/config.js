@@ -5,13 +5,13 @@ window.LNU_ARKIV_CONFIG = {
   "tenantId": "689edcde-fb62-4467-aef0-3afe537d0ad0",
   "sharepoint": {
     "hostname": "lnuno.sharepoint.com",
-    "sitePath": "/sites/staben",
+    "sitePath": "/sites/sekretariatet",
     "library": "E-postarkiv",
     "folder": "",
     "typeList": "Kommunikasjonstyper",
-    "projectList": "Prosjekter",
+    "projectList": "Arkivprosjekter",
     "typeField": "Title",
-    "projectField": "field_0",
+    "projectField": "Title",
     "activeField": "Aktiv"
   },
   "category": "Arkivert i SharePoint"
