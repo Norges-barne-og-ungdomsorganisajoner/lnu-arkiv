@@ -5,13 +5,13 @@
   "version": "1.0.0.0",
   "sharepoint": {
     "hostname": "lnuno.sharepoint.com",
-    "sitePath": "/sites/staben",
+    "sitePath": "/sites/sekretariatet",
     "library": "E-postarkiv",
     "folder": "",
     "typeList": "Kommunikasjonstyper",
-    "projectList": "Prosjekter",
+    "projectList": "Arkivprosjekter",
     "typeField": "Title",
-    "projectField": "field_0",
+    "projectField": "Title",
     "activeField": "Aktiv"
   },
   "category": "Arkivert i SharePoint",
